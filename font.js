@@ -91,6 +91,7 @@ Text = function(font_name, body, center, size) {
 	this.letterSpacing = 0;
 	this.kerning = 1;
 	this.centered = false;
+	this.condensation = 1;
 
 	this.center_to_origin = false;
 
@@ -101,7 +102,7 @@ Text = function(font_name, body, center, size) {
 
 Text.prototype.set = function(body) {
     this.lines = body.split('\n');
-    this.line_widths = [];
+    this.lineWidths = [];
     this.width = 0;
     this.height = 0;
 
@@ -116,7 +117,7 @@ Text.prototype.set = function(body) {
         if (this.width < line_width) {
             this.width = line_width;
         }
-        this.line_widths.push(line_width);
+        this.lineWidths.push(line_width);
         this.height += this.lineSpacing;
     }
 }
@@ -131,7 +132,7 @@ Text.prototype.draw = function() {
 		if (this.rot[1]) xRotate(this.rot[1]);
 		if (this.rot[2]) zRotate(this.rot[2]);
 	}
-	scale([this.size,this.size,this.size * this.depth]);
+	scale([this.size * this.condensation, this.size, this.size * this.depth]);
 	if (this.offset) translate(this.offset);
 
     if (this.center_to_origin) {
@@ -141,7 +142,7 @@ Text.prototype.draw = function() {
     for (var i = 0; i < this.lines.length; i++) {
         pushMatrix();
         if (this.centered) {
-            translate([(this.width - this.line_widths[i]) / 2, 0, 0]);
+            translate([(this.width - this.lineWidths[i]) / 2, 0, 0]);
         }
         for (var j = 0; j < this.lines[i].length; j++) {
             letter = this.lines[i][j];
