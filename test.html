@@ -7,7 +7,7 @@
 	<script src="webgl-fmi.js"></script>
 	<script src="shaders.js"></script>
 	<script src="font.js"></script>
-	<script src="/tmp/testfont.js"></script>
+	<script src="fonts/starwars_ttf.js"></script>
 	<script src="skeleton.js"></script>
 
 	<script>
@@ -48,14 +48,11 @@
 
             cube = new Cube([0, 0, 0], 1);
             cube.color = [1, 0, 0];
-            cube2 = new Cube([1, 1, 0], 1);
-            cube2.color = [1, 1, 0];
 
-            text = new Text('uglyFont', 'Bleh\nfoo\nbar\nnoooo', [0, 0, 0], 15);
-            text.center = [-text.width * 15/2, 0, 0];
+            text = new Text('uglyFont', 'STAR\nWARS foo bar', [0, 0, 0], 15);
             text.color = [0, 1, 1];
             text.centered = true;
-            text.depth = 0.2;
+            text.center_to_origin = true;
         }
 
 		var frame = 0;
@@ -78,7 +75,6 @@
 
 			pushMatrix();
                 cube.draw();
-                cube2.draw();
                 text.draw();
 			popMatrix();
 

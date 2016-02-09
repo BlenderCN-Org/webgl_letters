@@ -61,8 +61,8 @@ CanonicalFont.prototype.letterKerning = function(symbol) {
     return this.letters[symbol].kerning_width;
 }
 
-fonts = {}
-font_data = {}
+var fonts = {}
+var font_data = {}
 
 registerFont = function(name, data) {
     font_data[name] = data;
@@ -91,6 +91,8 @@ Text = function(font_name, body, center, size) {
 	this.letterSpacing = 0;
 	this.kerning = 1;
 	this.centered = false;
+
+	this.center_to_origin = false;
 
     this.depth = 1;
 
@@ -131,6 +133,10 @@ Text.prototype.draw = function() {
 	}
 	scale([this.size,this.size,this.size * this.depth]);
 	if (this.offset) translate(this.offset);
+
+    if (this.center_to_origin) {
+        translate([-this.width/2, 0, 0]);
+    }
 
     for (var i = 0; i < this.lines.length; i++) {
         pushMatrix();

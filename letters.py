@@ -43,6 +43,10 @@ def build_letter_object(letter, **options):
     text.body = letter
     
     bpy.ops.object.convert(target='MESH')
+    if text_object.type != 'MESH':
+        # unprintable character
+        return (None, width)
+    
     triangulate(text_object.data)
     
     return (text_object, width)
@@ -76,7 +80,10 @@ def make_mesh(mesh):
 
 def make_letter(letter, **options):
     letter_object, width = build_letter_object(letter, **options)
-    mesh = make_mesh(letter_object.data)
+    if letter_object:
+        mesh = make_mesh(letter_object.data)
+    else:
+        mesh = []
     
     bpy.ops.object.delete()
     
@@ -97,4 +104,4 @@ def json_to_file(data, name, file):
 
     
 
-json_to_file(make_font('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456890.?', resolution=3, extrude=0.2), 'uglyFont', '/tmp/testfont.js')
+json_to_file(make_font('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456890.? ', resolution=3, extrude=0.2), 'uglyFont', '/tmp/testfont.js')
