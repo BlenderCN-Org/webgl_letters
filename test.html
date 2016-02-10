@@ -54,7 +54,7 @@
 
             aLongTime = new Text(
                 'Franklin Gothic Book Flat',
-                'A long time ago, in a galaxy\nfar, far away....',
+                'A long time ago, in a faculty\nfar, far away....',
                 [0, 0, 0], 15
             );
             aLongTime.color = [0, 1, 1];
@@ -64,10 +64,9 @@
 
             starWars = new Text(
                 'Star Wars Flat',
-                'STAR\nWARS' ,
+                'WEBGL\nWARS' ,
                 [0, 0, 0], 15
             );
-            starWars.lineWidths[1] += 0.2;
             starWars.rot = [0, -90, 0];
             starWars.centered = true;
             starWars.center_to_origin = true;
@@ -84,7 +83,7 @@
 
             crawlTitle = new Text(
                 'Franklin Gothic Demi Flat',
-                '\nTHE EPIC STUFF' ,
+                '\nFONT MENACE' ,
                 [0, 0, 0], 25
             );
             crawlTitle.color = [2 * 1, 2 * 0.61, 0];
@@ -94,11 +93,21 @@
 
             crawl = new Text(
                 'Franklin Gothic Demi Flat',
-                '\n\n\n\nBlah blah blah, blah blah\nbut blah and foo bar' ,
+                '\n\n\n\nIt is a period of war.  \n' +
+                'RebelGL debugger teams\nstriking from a hidden\nbase'+
+                ' have won their first\nvictory against the Evil\nHTML EMPIRE.'+
+                ' During the\nheroic battle, javascript\n' +
+                'spies stole the focus.  '+
+                '\n\nBrave'+
+                ' developers '+
+                'are now\nfighting to restore the\nbalance in the CODE that\n'+
+                'will bring the fall of the\nHTML5 Empire...    ',
                 [0, 0, 0], 15
             );
             crawl.color = [2 * 1, 2 * 0.61, 0];
             crawl.centered = false;
+            crawl.condensation = 0.7;
+            crawl.justified = true;
             crawl.center_to_origin = true;
         }
 

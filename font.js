@@ -57,6 +57,10 @@ CanonicalFont.prototype.drawLetter = function(symbol) {
     gl.drawArrays(gl.TRIANGLES, letter.start, letter.vertex_count);
 }
 
+CanonicalFont.prototype.isWhitespace = function(symbol) {
+    return (this.letters[symbol].vertex_count == 0);
+}
+
 CanonicalFont.prototype.letterKerning = function(symbol) {
     return this.letters[symbol].kerning_width;
 }
@@ -103,21 +107,32 @@ Text = function(font_name, body, center, size) {
 Text.prototype.set = function(body) {
     this.lines = body.split('\n');
     this.lineWidths = [];
+    this.lineWhitespaceWidths = [];
+    this.lineWhitespaceCounts = [];
     this.width = 0;
     this.height = 0;
 
     var line_width = 0;
+    var whitespace_count = 0;
+    var letter_width = 0;
     for (var i = 0; i < this.lines.length; i++) {
         line_width = 0;
+        whitespace_count = 0;
         for (var j = 0; j < this.lines[i].length; j++) {
             letter = this.lines[i][j];
-            line_width += this.font.letterKerning(letter) * this.kerning +
-                          this.letterSpacing;
+            letter_width = this.font.letterKerning(letter) * this.kerning +
+                           this.letterSpacing;
+            line_width += letter_width;
+            if (this.font.isWhitespace(letter)) {
+                whitespace_count++;
+            }
+
         }
         if (this.width < line_width) {
             this.width = line_width;
         }
         this.lineWidths.push(line_width);
+        this.lineWhitespaceCounts.push(whitespace_count);
         this.height += this.lineSpacing;
     }
 }
@@ -148,8 +163,14 @@ Text.prototype.draw = function() {
             letter = this.lines[i][j];
             useMatrix();
             this.font.drawLetter(letter);
+            if (this.justified && this.font.isWhitespace(letter)) {
+                translate([
+                    (this.width - this.lineWidths[i]) / this.lineWhitespaceCounts[i],
+                    0, 0
+                ]);
+            }
             translate([this.font.letterKerning(letter) * this.kerning
-                    + this.letterSpacing, 0, 0]);
+                     + this.letterSpacing, 0, 0]);
         }
         popMatrix();
         translate([0, - this.lineSpacing, 0]);
