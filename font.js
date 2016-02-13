@@ -95,6 +95,8 @@ Text = function(font_name, body, center, size) {
 	this.letterSpacing = 0;
 	this.kerning = 1;
 	this.centered = false;
+	this.justified = false;
+
 	this.condensation = 1;
 
 	this.center_to_origin = false;
@@ -107,7 +109,6 @@ Text = function(font_name, body, center, size) {
 Text.prototype.set = function(body) {
     this.lines = body.split('\n');
     this.lineWidths = [];
-    this.lineWhitespaceWidths = [];
     this.lineWhitespaceCounts = [];
     this.width = 0;
     this.height = 0;

@@ -1,4 +1,5 @@
 import bpy
+import bpy_extras
 import json
 import bmesh
 
@@ -102,6 +103,120 @@ def json_to_file(data, name, file):
         json.dump(data, f, separators=(',', ':'))
         f.write(");\n")
 
+def initProperties(scene):
+    bpy.types.Scene.webgl_font_filename = bpy.props.StringProperty(
+        name = "Font file",
+        description = "TTF file from which to get data",
+        subtype = "FILE_PATH"
+    )
+    scene['webgl_font_filename'] = 'epic_font.ttf'
     
+    bpy.types.Scene.webgl_font_resolution = bpy.props.IntProperty(
+        name = "Resolution",
+        description = "Number of subdivisions",
+        min = 0,
+        max = 15
+    )
+    scene['webgl_font_resolution'] = 5
+    
+    bpy.types.Scene.webgl_font_offset = bpy.props.FloatProperty(
+        name = "Offset",
+        description = "Make letters thinner (lighter) or fatter",
+    )
+    scene['webgl_font_offset'] = 0.0
+    
+    bpy.types.Scene.webgl_font_extrude = bpy.props.FloatProperty(
+        name = "Extrude depth",
+        description = "Depth of letters (0 for flat)",
+    )
+    scene['webgl_font_extrude'] = 1.0
+    
+    bpy.types.Scene.webgl_font_bevel_depth = bpy.props.FloatProperty(
+        name = "Bevel depth",
+        description = "Bevel the edges of letters",
+    )
+    scene['webgl_font_bevel_depth'] = 0.0
+    
+    bpy.types.Scene.webgl_font_bevel_resolution = bpy.props.IntProperty(
+        name = "Bevel resolution",
+        description = "Number of subdivisions on letter edges",
+        min = 0,
+        max = 15
+    )
+    scene['webgl_font_bevel_resolution'] = 0
+    
+    bpy.types.Scene.webgl_font_size = bpy.props.FloatProperty(
+        name = "Size",
+        description = "Size (scale) of letters",
+    )
+    scene['webgl_font_size'] = 1.0
 
-json_to_file(make_font('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456890.? ', resolution=3, extrude=0.2), 'uglyFont', '/tmp/testfont.js')
+    bpy.types.Scene.webgl_font_characters = bpy.props.StringProperty(
+        name = "Characters",
+        description = "Symbols to include in the font",
+    )
+    scene['webgl_font_characters'] = \
+            'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' + \
+            'абвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪѝЮЯ' + \
+            '.,;:?! '
+
+    bpy.types.Scene.webgl_font_name = bpy.props.StringProperty(
+        name = "Object name",
+        description = "Javascript object name that will be created",
+    )
+    scene['webgl_font_name'] = 'uglyFont'
+
+    bpy.types.Scene.webgl_font_export_filename = bpy.props.StringProperty(
+        name = "Save to",
+        description = "Javascript file to export data to",
+        subtype = "FILE_PATH"
+    )
+    scene['webgl_font_export_filename'] = 'epic_font.js'
+
+initProperties(bpy.context.scene)
+
+class UIPanel(bpy.types.Panel):
+    bl_label = "WebGL font generator"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    
+    def draw(self, context):
+        self.layout.prop(context.scene, 'webgl_font_filename')
+        self.layout.prop(context.scene, 'webgl_font_resolution')
+        self.layout.prop(context.scene, 'webgl_font_offset')
+        self.layout.prop(context.scene, 'webgl_font_extrude')
+        self.layout.prop(context.scene, 'webgl_font_bevel_depth')
+        self.layout.prop(context.scene, 'webgl_font_bevel_resolution')
+        self.layout.prop(context.scene, 'webgl_font_size')
+        self.layout.prop(context.scene, 'webgl_font_characters')
+        self.layout.prop(context.scene, 'webgl_font_name')
+        self.layout.prop(context.scene, 'webgl_font_export_filename')
+        self.layout.operator("webgl_font.generate")
+ 
+
+class WEBGL_FONT_OT_generate(bpy.types.Operator):
+    bl_idname = "webgl_font.generate"
+    bl_label = "Generate WebGL font"
+    
+    def execute(self, context):
+        scn = bpy.context.scene
+        json_to_file(make_font(
+            scn['webgl_font_characters'],
+            resolution = scn['webgl_font_resolution'],
+            offset = scn['webgl_font_offset'],
+            extrude = scn['webgl_font_extrude'],
+            bevel_depth = scn['webgl_font_bevel_depth'],
+            bevel_resolution = scn['webgl_font_bevel_resolution'],
+            size = scn['webgl_font_size'],
+            font = bpy.data.fonts.load(scn['webgl_font_filename'])
+        ), 
+        scn['webgl_font_name'],
+        bpy.path.abspath(scn['webgl_font_export_filename'])
+)
+            
+                
+        return {'FINISHED'}
+
+bpy.utils.register_module(__name__)
+
+#json_to_file(make_font('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456890.? ', resolution=3, extrude=0.2), 'uglyFont', '/tmp/testfont.js')
