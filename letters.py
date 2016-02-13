@@ -160,6 +160,13 @@ def initProperties(scene):
             'абвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪѝЮЯ' + \
             '.,;:?! '
 
+    bpy.types.Scene.webgl_font_character_file = bpy.props.StringProperty(
+        name = "File with characters",
+        description = "File to read characters from (instead of the above field)",
+        subtype = "FILE_PATH"
+    )
+    scene['webgl_font_character_file'] = ''
+
     bpy.types.Scene.webgl_font_name = bpy.props.StringProperty(
         name = "Object name",
         description = "Javascript object name that will be created",
@@ -189,6 +196,7 @@ class UIPanel(bpy.types.Panel):
         self.layout.prop(context.scene, 'webgl_font_bevel_resolution')
         self.layout.prop(context.scene, 'webgl_font_size')
         self.layout.prop(context.scene, 'webgl_font_characters')
+        self.layout.prop(context.scene, 'webgl_font_character_file')
         self.layout.prop(context.scene, 'webgl_font_name')
         self.layout.prop(context.scene, 'webgl_font_export_filename')
         self.layout.operator("webgl_font.generate")
@@ -200,8 +208,16 @@ class WEBGL_FONT_OT_generate(bpy.types.Operator):
     
     def execute(self, context):
         scn = bpy.context.scene
+
+        char_file = scn['webgl_font_character_file']
+        if char_file:
+            with open(bpy.path.abspath(char_file), 'r') as f:
+                characters = f.read()
+        else:
+            characters = scn['webgl_font_characters']
+
         json_to_file(make_font(
-            scn['webgl_font_characters'],
+            characters,
             resolution = scn['webgl_font_resolution'],
             offset = scn['webgl_font_offset'],
             extrude = scn['webgl_font_extrude'],

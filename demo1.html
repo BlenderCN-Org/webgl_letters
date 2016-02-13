@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8"/>
+	<title>Роботът</title>
+
+	<script src="webgl-fmi.js"></script>
+	<script src="shaders.js"></script>
+	<script src="font.js"></script>
+	<script src="fonts/franklin_gothic_book_flat_ttf.js"></script>
+	<script src="fonts/pretty_ttf.js"></script>
+	<script src="skeleton.js"></script>
+
+	<script>
+		function start( )
+		{
+			var	canvas = document.getElementById("picasso");
+			canvas.addEventListener('webglcontextlost',function(event){event.preventDefault();},false);
+			canvas.addEventListener('webglcontextrestored',function(){init();},false);
+
+			init();
+            setTimeout(function() {
+                document.getElementById('main_theme').play();
+            }, 2500);
+			drawFrame();
+		}
+
+		// помощна функция, с която множество стойности се записват в обект
+		function custom(obj,props)
+		{
+			for(var n in props) obj[n]=props[n];
+			return obj;
+		}
+
+
+		function init()
+		{
+			gl = getContext("picasso");
+			glprog = getProgram(vShader,fShader);
+			getVariables();
+
+			gl.enable(gl.DEPTH_TEST);
+			gl.clearColor(0,0,0,1);
+
+			identity();
+			perspective(30,gl.canvas.width/gl.canvas.height,1,40000);
+			gl.uniform1i(uUseNormalMatrix,false);
+
+			gl.uniform3f(uAmbientColor,0.3,0.3,0.3);
+			gl.uniform3f(uDiffuseColor,1,1,1);
+			gl.uniform3f(uLightDir,0,0,-1);
+
+            text = new Text(
+                'prettyFont',
+                '色は匂へど散りぬるを\n' +
+                '我が世誰ぞ常ならん有\n' +
+                '為の奥山今日越えて浅\n' +
+                'き夢見じ酔ひもせず',
+                [0, 0, 0], 15
+            );
+            text.color = [0, 1, 1];
+            text.rot = [0, -90, 0];
+            text.centered = true;
+            text.center_to_origin = true;
+            text.kerning = 1.1;
+            text.lineSpacing = 1.1;
+        }
+
+		var frame = 0;
+
+		var time = now();
+        var startTime = time;
+		var oldTime = time;
+		function now() { return (new Date()).getTime()/1000; }
+		var t = 0;
+
+		function drawFrame()
+		{
+			time = now();
+			var dTime = time-oldTime;
+			oldTime = time;
+            var rTime = time - startTime;
+
+			frame++;
+			gl.clear(gl.COLOR_BUFFER_BIT+gl.DEPTH_BUFFER_BIT);
+
+			lookAt([0,-200,0],[0,0,0],[0,0,1]);
+
+            text.draw();
+
+			requestAnimationFrame(drawFrame);
+		}
+	</script>
+</head>
+
+<body onload="start()">
+	<h2>Роботът</h2>
+
+	<noscript>
+		Искаме JavaScript, но няма!
+	</noscript>
+
+	<canvas id="picasso" width="600" height="400" style="border: solid;">
+		Искаме canvas, но няма!
+	</canvas>
+
+    <audio id="main_theme">
+        <source src="http://vignette1.wikia.nocookie.net/starwars/images/6/6a/MainTitle.ogg/revision/latest?cb=20131029173807" type="audio/ogg" />
+        <source src="theme.ogg" type="audio/ogg" />
+        <source src="theme.mp3" type="audio/mp3" />
+    </audio>
+</body>
