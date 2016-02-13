@@ -2,13 +2,13 @@
 
 <head>
 	<meta charset="utf-8"/>
-	<title>Роботът</title>
+	<title>Буквите</title>
 
 	<script src="webgl-fmi.js"></script>
 	<script src="shaders.js"></script>
 	<script src="font.js"></script>
 	<script src="fonts/franklin_gothic_book_flat_ttf.js"></script>
-	<script src="fonts/pretty_ttf.js"></script>
+	<script src="fonts/genei_latemin_ttf.js"></script>
 	<script src="skeleton.js"></script>
 
 	<script>
@@ -19,9 +19,6 @@
 			canvas.addEventListener('webglcontextrestored',function(){init();},false);
 
 			init();
-            setTimeout(function() {
-                document.getElementById('main_theme').play();
-            }, 2500);
 			drawFrame();
 		}
 
@@ -40,7 +37,7 @@
 			getVariables();
 
 			gl.enable(gl.DEPTH_TEST);
-			gl.clearColor(0,0,0,1);
+			gl.clearColor(170.0/255,210.0/255,210.0/255,1);
 
 			identity();
 			perspective(30,gl.canvas.width/gl.canvas.height,1,40000);
@@ -51,19 +48,15 @@
 			gl.uniform3f(uLightDir,0,0,-1);
 
             text = new Text(
-                'prettyFont',
-                '色は匂へど散りぬるを\n' +
-                '我が世誰ぞ常ならん有\n' +
-                '為の奥山今日越えて浅\n' +
-                'き夢見じ酔ひもせず',
-                [0, 0, 0], 15
+                'GenEi LateMin', '',
+                [0, 0, 20], 20
             );
-            text.color = [0, 1, 1];
+            text.color = [135.0/255, 40.0/255, 66.0/255];
             text.rot = [0, -90, 0];
+            text.depth = 0.3;
             text.centered = true;
-            text.center_to_origin = true;
-            text.kerning = 1.1;
-            text.lineSpacing = 1.1;
+            text.centerToOrigin = true;
+            text.lineSpacing = 1;
         }
 
 		var frame = 0;
@@ -79,22 +72,45 @@
 			time = now();
 			var dTime = time-oldTime;
 			oldTime = time;
-            var rTime = time - startTime;
 
 			frame++;
 			gl.clear(gl.COLOR_BUFFER_BIT+gl.DEPTH_BUFFER_BIT);
 
 			lookAt([0,-200,0],[0,0,0],[0,0,1]);
 
+            pushMatrix();
+            zRotate(time * 10);
             text.draw();
+            popMatrix();
 
 			requestAnimationFrame(drawFrame);
 		}
+
+        function setText(language) {
+            if (language == 'bulgarian') {
+                text.kerning = 0.7;
+            } else {
+                text.kerning = 1;
+            }
+            body = {
+                'japanese': '色は匂へど散りぬるを\n' +
+                            '我が世誰ぞ常ならん有\n' +
+                            '為の奥山今日越えて浅\n' +
+                            'き夢見じ酔ひもせず',
+                'english':  'The quick brown fox\n' +
+                            'jumps over the lazy\n' +
+                            'dog',
+                'bulgarian': 'Щеш гризвай\nпътьом\n' +
+                             'чужд хляб\n' +
+                             'с кюфтенца'
+            }[language];
+            text.set(body);
+        }
 	</script>
 </head>
 
 <body onload="start()">
-	<h2>Роботът</h2>
+	<h2>Буквите</h2>
 
 	<noscript>
 		Искаме JavaScript, но няма!
@@ -104,9 +120,9 @@
 		Искаме canvas, но няма!
 	</canvas>
 
-    <audio id="main_theme">
-        <source src="http://vignette1.wikia.nocookie.net/starwars/images/6/6a/MainTitle.ogg/revision/latest?cb=20131029173807" type="audio/ogg" />
-        <source src="theme.ogg" type="audio/ogg" />
-        <source src="theme.mp3" type="audio/mp3" />
-    </audio>
+    <div>
+        <button onclick="setText('japanese');">японски</button>
+        <button onclick="setText('english');">английски</button>
+        <button onclick="setText('bulgarian');">български</button>
+    </div>
 </body>

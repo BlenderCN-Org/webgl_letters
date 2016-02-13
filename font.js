@@ -99,7 +99,7 @@ Text = function(font_name, body, center, size) {
 
 	this.condensation = 1;
 
-	this.center_to_origin = false;
+	this.centerToOrigin = false;
 
     this.depth = 1;
 
@@ -151,7 +151,7 @@ Text.prototype.draw = function() {
 	scale([this.size * this.condensation, this.size, this.size * this.depth]);
 	if (this.offset) translate(this.offset);
 
-    if (this.center_to_origin) {
+    if (this.centerToOrigin) {
         translate([-this.width/2, 0, 0]);
     }
 
