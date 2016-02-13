@@ -2,7 +2,7 @@
 
 <head>
 	<meta charset="utf-8"/>
-	<title>Роботът</title>
+	<title>ВебГЛ войни</title>
 
 	<script src="webgl-fmi.js"></script>
 	<script src="shaders.js"></script>
@@ -12,6 +12,12 @@
 	<script src="fonts/franklin_gothic_book_ttf.js"></script>
 	<script src="fonts/franklin_gothic_demi_flat_ttf.js"></script>
 	<script src="skeleton.js"></script>
+
+	
+	<style>
+		body   { text-align: center; }
+		canvas { border: solid 1px DarkSlateGray; width:100%; height:100%; top:0; left:0; position:fixed; }
+	</style>
 
 	<script>
 		function start( )
@@ -60,7 +66,7 @@
             aLongTime.color = [0, 1, 1];
             aLongTime.rot = [0, -90, 0];
             aLongTime.centered = false;
-            aLongTime.center_to_origin = true;
+            aLongTime.centerToOrigin = true;
 
             starWars = new Text(
                 'Star Wars Flat',
@@ -69,7 +75,7 @@
             );
             starWars.rot = [0, -90, 0];
             starWars.centered = true;
-            starWars.center_to_origin = true;
+            starWars.centerToOrigin = true;
 
             
             crawlEpisode = new Text(
@@ -79,7 +85,7 @@
             );
             crawlEpisode.color = [2 * 1, 2 * 0.61, 0];
             crawlEpisode.centered = true;
-            crawlEpisode.center_to_origin = true;
+            crawlEpisode.centerToOrigin = true;
 
             crawlTitle = new Text(
                 'Franklin Gothic Demi Flat',
@@ -88,7 +94,7 @@
             );
             crawlTitle.color = [2 * 1, 2 * 0.61, 0];
             crawlTitle.centered = true;
-            crawlTitle.center_to_origin = true;
+            crawlTitle.centerToOrigin = true;
             crawlTitle.condensation = 0.6;
 
             crawl = new Text(
@@ -108,7 +114,7 @@
             crawl.centered = false;
             crawl.condensation = 0.7;
             crawl.justified = true;
-            crawl.center_to_origin = true;
+            crawl.centerToOrigin = true;
         }
 
 		var frame = 0;
@@ -125,6 +131,11 @@
 			var dTime = time-oldTime;
 			oldTime = time;
             var rTime = time - startTime;
+
+			gl.canvas.width = gl.canvas.offsetWidth;
+			gl.canvas.height = gl.canvas.offsetHeight;
+			gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
+
 
 			frame++;
 			gl.clear(gl.COLOR_BUFFER_BIT+gl.DEPTH_BUFFER_BIT);
@@ -163,8 +174,6 @@
 </head>
 
 <body onload="start()">
-	<h2>Роботът</h2>
-
 	<noscript>
 		Искаме JavaScript, но няма!
 	</noscript>
