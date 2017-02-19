@@ -85,21 +85,21 @@ getFont = function(name) {
 Text = function(font_name, body, center, size) {
     this.font = getFont(font_name);
 
-	this.center = center || [0, 0, 0];
-	this.size = size || 1;
-	this.color = [1,0.75,0];
-	this.offset = undefined;
-	this.rot = undefined;
+    this.center = center || [0, 0, 0];
+    this.size = size || 1;
+    this.color = [1,0.75,0];
+    this.offset = undefined;
+    this.rot = undefined;
 
-	this.lineSpacing = 0.8;
-	this.letterSpacing = 0;
-	this.kerning = 1;
-	this.centered = false;
-	this.justified = false;
+    this.lineSpacing = 0.8;
+    this.letterSpacing = 0;
+    this.kerning = 1;
+    this.centered = false;
+    this.justified = false;
 
-	this.condensation = 1;
+    this.condensation = 1;
 
-	this.centerToOrigin = false;
+    this.centerToOrigin = false;
 
     this.depth = 1;
 
@@ -139,17 +139,17 @@ Text.prototype.set = function(body) {
 }
 
 Text.prototype.draw = function() {
-	pushMatrix();
-	gl.vertexAttrib3fv(aColor, this.color); // подаваме цвета
-	translate(this.center);
-	if (this.rot)
-	{
-		if (this.rot[0]) zRotate(this.rot[0]);
-		if (this.rot[1]) xRotate(this.rot[1]);
-		if (this.rot[2]) zRotate(this.rot[2]);
-	}
-	scale([this.size * this.condensation, this.size, this.size * this.depth]);
-	if (this.offset) translate(this.offset);
+    pushMatrix();
+    gl.vertexAttrib3fv(aColor, this.color); // подаваме цвета
+    translate(this.center);
+    if (this.rot)
+    {
+        if (this.rot[0]) zRotate(this.rot[0]);
+        if (this.rot[1]) xRotate(this.rot[1]);
+        if (this.rot[2]) zRotate(this.rot[2]);
+    }
+    scale([this.size * this.condensation, this.size, this.size * this.depth]);
+    if (this.offset) translate(this.offset);
 
     if (this.centerToOrigin) {
         translate([-this.width/2, 0, 0]);
@@ -177,5 +177,5 @@ Text.prototype.draw = function() {
         translate([0, - this.lineSpacing, 0]);
     }
 
-	popMatrix();
+    popMatrix();
 }
